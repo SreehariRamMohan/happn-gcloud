@@ -97,7 +97,7 @@ def matches():
 
             results = cursor.fetchall()
 
-            cursor.execute("SELECT * FROM embeddings WHERE uid = ?", (friend_code,))
+            cursor.execute("SELECT data FROM embeddings WHERE uid = ?", (friend_code,))
             current_embedding = cursor.fetchone()[0]
 
             print("current embedding", convert_array(current_embedding))
@@ -106,14 +106,13 @@ def matches():
             for row in results:
                 uid, data = row
                 print("data", data)
-                sim = get_cosine_similarity(convert_array(current_embedding), convert_array(data))
+                sim = get_cosine_similarity(convert_array(current_embedding)[0], convert_array(data)[0])
                 cosine_similarities.append((uid, sim))
 
             sorted_matches = sorted(cosine_similarities, key=lambda x : x[1], reverse=True)
 
             print(f"Finding matches for {friend_code}: friend {sorted_matches[0][0]} has similarity {sorted_matches[0][1]}")
-            top_match = map(lambda x: x[1], sorted_matches[:3])    
-            return jsonify(uid=top_match), 200
+            return jsonify(uid=sorted_matches[0][0]), 200
 
         except sqlite3.Error as er:
             print('SQLite error: %s' % (' '.join(er.args)))
