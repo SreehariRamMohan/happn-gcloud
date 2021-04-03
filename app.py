@@ -70,7 +70,7 @@ def questions():
         print("type on insert is", type(embeddings), embeddings[0])
         try: 
             print('tables:', cursor.fetchall())
-            cursor.execute("INSERT INTO embeddings (uid, data) VALUES (?, ?)", (friend_code, adapt_array(embeddings)))
+            cursor.execute("INSERT OR REPLACE INTO embeddings (uid, data) VALUES (?, ?)", (friend_code, adapt_array(embeddings)))
             return jsonify(success=True), 201
         except sqlite3.Error as er:
             print('SQLite error: %s' % (' '.join(er.args)))
