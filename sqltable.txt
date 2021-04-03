@@ -1,0 +1,4 @@
+CREATE TABLE embeddings(
+   ...> uid TEXT PRIMARY KEY,
+   ...> data BLOB);
+
